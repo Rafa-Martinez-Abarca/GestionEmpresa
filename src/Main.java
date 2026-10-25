@@ -331,5 +331,7 @@ public class Main {
         System.out.println(proyecto3.obtenerEmpleadosPorProyecto());
 
         System.out.println("El programa continúa.");
+
+        System.out.println("Horas reales de tareas completadas: " + proyecto2.calcularHorasRealesDeTareasCompletadas());
     }
 }

@@ -295,5 +295,31 @@ public class Proyecto {
         }
         return tareasEmpleado;
     }
+    //buscar una tarea por prioridad.
+    public ArrayList<Tareas> obtenerTareasPorPrioridad(Prioridad prioridad){
+        if (prioridad == null) {
+            throw new IllegalArgumentException("No se admiten valores nulos");
+        }
+        
+        ArrayList<Tareas> tareasPorPrioridad = new ArrayList<>();
+        for (Tareas tareas : listaTareas.values()) {
+            if(tareas.getPrioridad() == prioridad){
+                tareasPorPrioridad.add(tareas);
+            }
+        }
+
+        return tareasPorPrioridad;
+    }
+
+    public int calcularHorasRealesDeTareasCompletadas(){
+        int totalHoras = 0;
+
+        for (Tareas tareas : listaTareas.values()) {
+            if (tareas.getEstadoTarea() == EstadoTarea.COMPLETADA) {
+                totalHoras += tareas.getHorasReales(); 
+            }
+        }
+        return totalHoras;
+    }
 
 }
