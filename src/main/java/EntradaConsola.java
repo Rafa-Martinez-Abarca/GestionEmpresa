@@ -63,4 +63,21 @@ public class EntradaConsola {
         }
 
     }
+
+    public static boolean leerConfirmacion(Scanner sc, String mensaje) {
+
+        while (true) {
+            System.out.println(mensaje);
+            String respuesta = sc.nextLine();
+            boolean confirmacion = "s".equalsIgnoreCase(respuesta);
+            if (confirmacion) {
+                return true;
+            }
+            if (respuesta.equalsIgnoreCase("n")) {
+                return false;
+            }
+            System.out.println("Respuesta no valida.");
+        }
+
+    }
 }

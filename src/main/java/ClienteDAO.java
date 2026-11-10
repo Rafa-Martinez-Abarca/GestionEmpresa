@@ -3,6 +3,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.sql.Statement;
 
 public class ClienteDAO {
      public static Cliente obtenerCliente(int id, Connection conexion) throws SQLException{
@@ -78,16 +79,42 @@ public class ClienteDAO {
         }
     }
 
-      public static int insertarCliente(String nombre, String email, Connection conexion) throws SQLException{
+    // Devuelve el id generado para el nuevo cliente, no el número de filas insertadas.
+    // throws SQLException permite que el error llegue al catch de quien llama al método.
+    public static int insertarCliente(String nombre, String email, Connection conexion) throws SQLException {
+        // No indicamos el id: PostgreSQL lo genera automáticamente.
+       
         String sql = "INSERT INTO cliente(nombre, email) VALUES (?, ?)";
 
-        try(PreparedStatement consulta = conexion.prepareStatement(sql)){
+        // RETURN_GENERATED_KEYS solicita recuperar las claves generadas por el INSERT.
+        // Este try cierra automáticamente el PreparedStatement al salir del bloque.
+        try (PreparedStatement consulta = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            // Las posiciones de los parámetros empiezan en 1 y siguen el orden de los ?.
             consulta.setString(1, nombre);
             consulta.setString(2, email);
 
-            int totalFilas = consulta.executeUpdate();
+            // Ejecuta el INSERT. Devuelve las filas afectadas, pero aquí no guardamos ese valor.
+            // Esta llamada es necesaria aunque no utilicemos su resultado.
+            consulta.executeUpdate();
 
-            return totalFilas;
+            // Recupera las claves de la inserción anterior; no ejecuta otro INSERT.
+            // Este try cierra automáticamente el ResultSet.
+            try (ResultSet claves = consulta.getGeneratedKeys()) {
+                // El cursor empieza antes de la primera fila: next() avanza hasta ella.
+                // Devuelve true si hay una fila de la que podamos leer el id.
+                if (claves.next()) {
+                    // Lee la columna id del resultado, que contiene el identificador generado.
+                    int id = claves.getInt("id");
+                    // Termina el método y entrega el id a quien lo llamó.
+                    // Los recursos de los dos try se cierran también al hacer return.
+                    return id;
+                }
+            }
+
+            // Solo llegamos aquí si no recibimos ninguna fila con la clave generada.
+            // throw lanza el error; throws en la declaración permite propagarlo.
+            // Este error no deshace por sí solo una inserción ya realizada.
+            throw new SQLException("No se pudo recuperar el id del cliente insertado.");
         }
     }
 
