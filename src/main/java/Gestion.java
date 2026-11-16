@@ -1,3 +1,4 @@
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -115,12 +116,12 @@ public class Gestion {
     /**
      * Suma el presupuesto de los proyectos activos. Devuelve cero si no hay ninguno.
      */
-    public double calcularPresupuestoTotalProyectosActivos() {
-        double cantidadTotal = 0;
+    public BigDecimal calcularPresupuestoTotalProyectosActivos() {
+        BigDecimal cantidadTotal = BigDecimal.ZERO;
 
         for (Proyecto proyecto : listaProyectos.obtenerTodos()) {
             if (proyecto.getEstadoProyecto() == EstadoProyecto.ACTIVO) {
-                cantidadTotal += proyecto.getCosteTotal();
+                cantidadTotal = cantidadTotal.add(proyecto.getPresupuesto());
             }
         }
         return cantidadTotal;
@@ -157,15 +158,15 @@ public class Gestion {
      */
     public Cliente clienteConMayorPresupuestoAcumulado() {
         Cliente clienteConMayorGasto = null;
-        HashMap<Cliente, Double> sumaDeCantidad = new HashMap<>();
-        double compararGastos = 0;
+        HashMap<Cliente, BigDecimal> sumaDeCantidad = new HashMap<>();
+        BigDecimal compararGastos = BigDecimal.ZERO;
         for (Proyecto proyecto : listaProyectos.obtenerTodos()) {
             sumaDeCantidad.put(proyecto.getCliente(),
-                    sumaDeCantidad.getOrDefault(proyecto.getCliente(), 0.0) + proyecto.getCosteTotal());
-        }
+                    sumaDeCantidad.getOrDefault(proyecto.getCliente(), BigDecimal.ZERO).add(proyecto.getPresupuesto()));
+        }           
 
-        for (Map.Entry<Cliente, Double> entrada : sumaDeCantidad.entrySet()) {
-            if (entrada.getValue() >= compararGastos) {
+        for (Map.Entry<Cliente, BigDecimal> entrada : sumaDeCantidad.entrySet()) {
+            if (entrada.getValue().compareTo(compararGastos) >= 0) {
                 compararGastos = entrada.getValue();
                 clienteConMayorGasto = entrada.getKey();
             }

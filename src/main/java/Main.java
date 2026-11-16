@@ -1,3 +1,5 @@
+import java.math.BigDecimal;
+
 /**
  * Demostración por consola con datos de ejemplo y pruebas manuales de errores esperados.
  */
@@ -17,11 +19,11 @@ public class Main {
         Cliente cliente2 = new Cliente(2, "Pepe", "rrhh@gmail.com", "Plastidecor");
         Cliente cliente3 = new Cliente(3, "Lopez", "dssd@gmail.com", "Fini");
 
-        Proyecto proyecto1 = new Proyecto(1, "Banco", 500, cliente1);
-        Proyecto proyecto2 = new Proyecto(2, "Diapositivas", 200, cliente1);
-        Proyecto proyecto3 = new Proyecto(3, "e-commerce", 1500, cliente2);
-        Proyecto proyecto4 = new Proyecto(4, "Tareas comunes", 200, cliente2);
-        Proyecto proyecto6 = new Proyecto(5, "Tareas comunes", 200, cliente2);
+        Proyecto proyecto1 = new Proyecto(1, "Banco", new BigDecimal("500"), cliente1);
+        Proyecto proyecto2 = new Proyecto(2, "Diapositivas", new BigDecimal(200), cliente1);
+        Proyecto proyecto3 = new Proyecto(3, "e-commerce", new BigDecimal(1500), cliente2);
+        Proyecto proyecto4 = new Proyecto(4, "Tareas comunes", new BigDecimal(200), cliente2);
+        Proyecto proyecto6 = new Proyecto(5, "Tareas comunes", new BigDecimal(200), cliente2);
 
         Tareas tareas1 = new Tareas(2, "Login", "Hacer que una persona introduzca su usuario y contraseña.", 11, 2,
                 Prioridad.MEDIA);
@@ -169,7 +171,7 @@ public class Main {
 
         // Valores fuera de rango: presupuesto, salario y horas.
         try {
-            Proyecto proyecto5 = new Proyecto(4, "Tareas comunes", -200, cliente2);
+            Proyecto proyecto5 = new Proyecto(4, "Tareas comunes", new BigDecimal(-200), cliente2);
 
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
@@ -220,7 +222,7 @@ public class Main {
             System.out.println(e.getMessage());
         }
 
-        Proyecto proyecto13 = new Proyecto(3, "Conceptos básicos", 200, cliente1);
+        Proyecto proyecto13 = new Proyecto(3, "Conceptos básicos", new BigDecimal(200), cliente1);
         try {
             gestion.agregarProyectos(proyecto13);
         } catch (IllegalArgumentException e) {

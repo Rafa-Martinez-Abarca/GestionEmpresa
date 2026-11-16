@@ -1,3 +1,4 @@
+import java.math.BigDecimal;
 import java.util.Scanner;
 
 public class EntradaConsola {
@@ -80,4 +81,24 @@ public class EntradaConsola {
         }
 
     }
+
+    public static BigDecimal leerPresupuesto(Scanner sc, String mensaje) {
+
+        while (true) {
+            try {
+                String texto = leerTextoNoVacio(sc, mensaje);
+                BigDecimal presupuesto = new BigDecimal(texto);
+                if (presupuesto.compareTo(BigDecimal.ZERO) >= 0) {
+                    return presupuesto;
+                } else {
+                    System.out.println("El presupuesto no puede ser negativo");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Debes de pasar un numero.");
+            }
+
+        }
+
+    }
+
 }

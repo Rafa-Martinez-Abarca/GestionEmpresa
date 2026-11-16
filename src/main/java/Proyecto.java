@@ -1,4 +1,5 @@
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -9,7 +10,7 @@ public class Proyecto {
     private int id;
     private String nombreProyecto;
     private EstadoProyecto estadoProyecto;
-    private double costeTotal;
+    private BigDecimal presupuesto;
     private Cliente cliente;
     private HashMap<Integer, Tareas> listaTareas = new HashMap<>();
     private HashMap<Integer, Empleados> listaEmpleados = new HashMap<>();
@@ -17,18 +18,20 @@ public class Proyecto {
     /**
      * Crea un proyecto en planificación. Rechaza id o presupuesto negativos y cliente null.
      */
-    public Proyecto(int id, String nombreProyecto, double costeTotal, Cliente cliente) {
+    public Proyecto(int id, String nombreProyecto, BigDecimal presupuesto, Cliente cliente) {
         if (id < 0) {
             throw new IllegalArgumentException("No se puede pasar un ID negativo.");
         }
 
         this.id = id;
         this.nombreProyecto = nombreProyecto;
-
-        if (costeTotal < 0) {
+        if (presupuesto == null) {
+            throw new NoPuedeSerNullException("No se admiten valores nulos");
+        }
+        if (presupuesto.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("Un proyecto no puede tener un precio negativo.");
         }
-        this.costeTotal = costeTotal;
+        this.presupuesto = presupuesto;
 
         estadoProyecto = EstadoProyecto.PLANIFICACION;
 
@@ -80,8 +83,8 @@ public class Proyecto {
         this.estadoProyecto = estadoProyecto;
     }
 
-    public double getCosteTotal() {
-        return costeTotal;
+    public BigDecimal getPresupuesto() {
+        return presupuesto;
     }
 
     public int totalEmpleados() {
@@ -95,7 +98,7 @@ public class Proyecto {
 
     @Override
     public String toString() {
-        return " ID: " + id + " Nombre del proyecto: " + nombreProyecto + " Cliente: " + cliente;
+        return " ID: " + id + " Nombre del proyecto: " + nombreProyecto + " Cliente: " + cliente + " Presupuesto = " + presupuesto;
     }
 
     /**
