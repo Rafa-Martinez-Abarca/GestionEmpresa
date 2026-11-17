@@ -6,12 +6,17 @@ import java.util.ArrayList;
 public class ProyectoService {
     public static BigDecimal calcularPresupuestoTotalCliente(Cliente cliente, Connection conexion) throws SQLException{
         ArrayList<Proyecto> proyectosCliente = ProyectoDAO.obtenerTodosLosProyectosDeUnCliente(cliente, conexion);
-        BigDecimal totalPresupuestos = BigDecimal.ZERO;
+     
+        return sumarPresupuestos(proyectosCliente);
+    }
 
-        for (Proyecto proyectos : proyectosCliente) {
-          totalPresupuestos = totalPresupuestos.add(proyectos.getPresupuesto());
+    public static BigDecimal sumarPresupuestos(ArrayList<Proyecto> proyectos){
+        BigDecimal totalPresupuesto = BigDecimal.ZERO;
+
+        for (Proyecto proyecto : proyectos) {
+            totalPresupuesto = totalPresupuesto.add(proyecto.getPresupuesto());
         }
-
-        return totalPresupuestos;
+        
+        return totalPresupuesto;
     }
 }
